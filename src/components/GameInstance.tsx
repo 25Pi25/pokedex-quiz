@@ -22,13 +22,13 @@ export default function GameInstance({ pokemon: { name, pokemon_v2_pokemonspecie
 	if (!data || error) return <div>Error occurred. Try reloading.</div>
 
 	return <div>
+		<button onClick={() => setRevealed(count => Math.min(count + 1, dexEntries.length))}>Reveal New Entry</button>
+		<button onClick={() => setShowAnswer(showAnswer => !showAnswer)}>{showAnswer ? "Hide Answer" : "Show Answer"}</button>
 		<h1>{showAnswer && languageName}</h1>
 		{dexEntries.map((entry, i) => i + 1 <= revealed &&
 			<div key={i}>
 				<p className={revealed ? "entry show-box" : "entry"}>{entry.text}</p>
 			</div>
 		)}
-		<button onClick={() => setRevealed(count => Math.min(count + 1, dexEntries.length))}>Reveal New Entry</button>
-		<button onClick={() => setShowAnswer(showAnswer => !showAnswer)}>{showAnswer ? "Hide Answer" : "Show Answer"}</button>
 	</div>
 }
