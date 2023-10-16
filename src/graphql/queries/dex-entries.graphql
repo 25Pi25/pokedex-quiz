@@ -1,0 +1,13 @@
+query DexEntries($pokemon: String!, $language_id: Int!) {
+  pokemon_v2_pokemonspecies(where: {name: {_eq: $pokemon}}) {
+    name
+    pokemon_v2_pokemonspeciesflavortexts(where: {language_id: {_eq: $language_id}}) {
+      flavor_text
+      pokemon_v2_version {
+        pokemon_v2_versionnames(where: {language_id: {_eq: $language_id}}) {
+          name
+        }
+      }
+    }
+  }
+}
