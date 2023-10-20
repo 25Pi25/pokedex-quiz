@@ -1,5 +1,5 @@
 import { PokemonNameQuery, useDexEntriesQuery } from '../graphql/generated';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ArrayType } from '../types';
 
 interface Props {
@@ -8,6 +8,10 @@ interface Props {
 export default function GameInstance({ pokemon: { name, pokemon_v2_pokemonspeciesnames: [{ name: languageName }] } }: Props) {
 	const [revealed, setRevealed] = useState<number>(1);
 	const [showAnswer, setShowAnswer] = useState<boolean>(false);
+	useEffect(() => {
+		setRevealed(1);
+		setShowAnswer(false)
+	}, [name])
 
 	const { loading, error, data } = useDexEntriesQuery({ variables: { pokemon: name, language_id: 9 } });
 	const dexEntries = useMemo(() =>
@@ -18,8 +22,8 @@ export default function GameInstance({ pokemon: { name, pokemon_v2_pokemonspecie
 			}))
 			.filter((entry, _, entries) => entries.find(({ text }) => text == entry.text) == entry)
 			.sort(() => Math.random()), [data])
-	if (loading || !dexEntries) return <div>Loading...</div>
-	if (!data || error) return <div>Error occurred. Try reloading.</div>
+	if (loading) return <div>Loading...</div>
+	if (!data || !dexEntries || error) return <div>Error occurred. Try reloading.</div>
 
 	return <div>
 		<button onClick={() => setRevealed(count => Math.min(count + 1, dexEntries.length))}>Reveal New Entry</button>
